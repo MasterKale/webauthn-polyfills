@@ -25,6 +25,7 @@ if (window.PublicKeyCredential) {
   }
   const browserName = browser.name;
   const browserVer = parseFloat(browser.version.replace(/^([0-9]+\.[0-9]+).*$/, '$1'));
+  const isSafari = browserName.indexOf('Safari') > -1;
 
   const engine = uap.getEngine();
   if (!engine?.version) {
@@ -120,7 +121,7 @@ if (window.PublicKeyCredential) {
 
   if (!PublicKeyCredential.getClientCapabilities ||
       // If this is Safari 17.4+, there's a spec glitch.
-      (browserName === 'Safari' && browserVer >= 17.4)) {
+      (isSafari && browserVer >= 17.4)) {
     PublicKeyCredential.getClientCapabilities = async () => {
       let conditionalCreate = false;
       let conditionalGet = false;
@@ -152,13 +153,13 @@ if (window.PublicKeyCredential) {
       }
 
       // `conditionalCreate` is `true` on Safari 15+
-      if (browserName === 'Safari' && browserVer >= 18) {
+      if (isSafari && browserVer >= 18) {
         conditionalCreate = true;
       }
       // `hybridTransport` is `true` on Firefox 119+, Chromium 108+ and Safari 16+
       if ((engineName === 'Blink' && engineVer >= 108) ||
           (browserName === 'Firefox' && browserVer >= 119) ||
-          (browserName === 'Safari' && browserVer >= 16)) {
+          (isSafari && browserVer >= 16)) {
         hybridTransport = true;
       } 
       // `passkeyPlatformAuthenticator` is `true` if `hybridTransport` or `userVerifyingPlatformAuthenticator` is `true`.
