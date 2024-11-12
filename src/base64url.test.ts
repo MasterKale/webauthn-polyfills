@@ -1,7 +1,7 @@
 import { assertEquals } from '@std/assert';
 import { describe, it } from '@std/testing/bdd';
 
-import { Base64URL } from './index.ts';
+import { Base64URL } from './base64url.ts';
 
 describe('Base64URL', () => {
   it('should encode to string', () => {
