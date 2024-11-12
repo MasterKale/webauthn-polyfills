@@ -9,7 +9,7 @@ export class Base64URL {
   /**
    * Convert bytes into a base64url-encoded string
    */
-  static encode(buffer: ArrayBuffer) {
+  static encode(buffer: ArrayBuffer): string {
     const base64 = globalThis.btoa(
       String.fromCharCode(...new Uint8Array(buffer)),
     );
@@ -20,7 +20,7 @@ export class Base64URL {
   /**
    * Convert a base64url-encoded string into bytes
    */
-  static decode(base64url: string) {
+  static decode(base64url: string): ArrayBuffer {
     const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
     const binStr = globalThis.atob(base64);
     const bin = new Uint8Array(binStr.length);
@@ -66,7 +66,7 @@ if (globalThis.PublicKeyCredential) {
    * See https://w3c.github.io/webauthn/#sctn-parseCreationOptionsFromJSON
    */
   // @ts-ignore: We're polyfilling this, so ignore whether TS knows about this or not
-  if (!globalThis.PublicKeyCredential?.parseCreationOptionsFromJSON) {
+  if (!PublicKeyCredential.parseCreationOptionsFromJSON) {
     Object.defineProperty(PublicKeyCredential, 'parseCreationOptionsFromJSON', {
       value: (options: PublicKeyCredentialCreationOptionsJSON) => {
         const user = {
@@ -100,7 +100,7 @@ if (globalThis.PublicKeyCredential) {
    * See https://w3c.github.io/webauthn/#sctn-parseRequestOptionsFromJSON
    */
   // @ts-ignore: We're polyfilling this, so ignore whether TS knows about this or not
-  if (!globalThis.PublicKeyCredential?.parseRequestOptionsFromJSON) {
+  if (!PublicKeyCredential.parseRequestOptionsFromJSON) {
     Object.defineProperty(PublicKeyCredential, 'parseRequestOptionsFromJSON', {
       value: (options: PublicKeyCredentialRequestOptionsJSON) => {
         const challenge = Base64URL.decode(options.challenge);
@@ -129,7 +129,7 @@ if (globalThis.PublicKeyCredential) {
    * See https://w3c.github.io/webauthn/#dom-publickeycredential-tojson
    */
   // @ts-ignore: We're polyfilling this, so ignore whether TS knows about this or not
-  if (!globalThis.PublicKeyCredential.prototype.toJSON) {
+  if (!PublicKeyCredential.prototype.toJSON) {
     Object.defineProperty(PublicKeyCredential.prototype, 'toJSON', {
       value: function () {
         try {
