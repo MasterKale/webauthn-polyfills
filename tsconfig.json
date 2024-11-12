@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "ES2018",
+      "dom",
+    ],
+    "outDir": "./dist",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "declaration": true,
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true
+  },
+  "typeRoots": [
+    "node_modules/@types"
+  ],
+}
