@@ -9,6 +9,7 @@
     "jsr:@std/path@^1.0.7": "1.0.8",
     "jsr:@std/path@^1.0.8": "1.0.8",
     "jsr:@std/testing@^1.0.4": "1.0.4",
+    "npm:@simplewebauthn/types@11": "11.0.0",
     "npm:ua-parser-js@^1.0.39": "1.0.39"
   },
   "jsr": {
@@ -49,6 +50,9 @@
     }
   },
   "npm": {
+    "@simplewebauthn/types@11.0.0": {
+      "integrity": "sha512-b2o0wC5u2rWts31dTgBkAtSNKGX0cvL6h8QedNsKmj8O4QoLFQFR3DBVBUlpyVEhYKA+mXGUaXbcOc4JdQ3HzA=="
+    },
     "ua-parser-js@1.0.39": {
       "integrity": "sha512-k24RCVWlEcjkdOxYmVJgeD/0a1TiSpqLg+ZalVGV9lsnr4yqu0w7tX/x2xX6G4zpkgQnRf89lxuZ1wsbjXM8lw=="
     }
@@ -57,6 +61,7 @@
     "dependencies": [
       "jsr:@std/assert@^1.0.7",
       "jsr:@std/testing@^1.0.4",
+      "npm:@simplewebauthn/types@11",
       "npm:ua-parser-js@^1.0.39"
     ]
   }
