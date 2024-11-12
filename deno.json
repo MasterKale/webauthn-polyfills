@@ -10,7 +10,8 @@
   },
   "fmt": {
     "singleQuote": true,
-    "semiColons": true
+    "semiColons": true,
+    "lineWidth": 100
   },
   "compilerOptions": {
     "lib": [
