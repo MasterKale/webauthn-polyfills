@@ -180,7 +180,7 @@ if (PublicKeyCredential) {
         signalUnknownCredential = true;
       }
 
-      // `conditionalCreate` is `true` on Safari 15+
+      // `conditionalCreate` is `true` on Safari 18+
       if (isSafari && browserVer >= 18) {
         conditionalCreate = true;
       }
@@ -191,12 +191,13 @@ if (PublicKeyCredential) {
           (isSafari && browserVer >= 16)) {
         hybridTransport = true;
       } 
-      // `passkeyPlatformAuthenticator` is `true` if `hybridTransport` and `userVerifyingPlatformAuthenticator` are `true`.
+      // `passkeyPlatformAuthenticator` is `true` if `hybridTransport` or `userVerifyingPlatformAuthenticator` are `true`.
       if (hybridTransport || userVerifyingPlatformAuthenticator) {
         passkeyPlatformAuthenticator = true;
       }
-      // `relatedOrigins` is `true` on Chromium 128+
-      if ((engineName === 'Blink' && engineVer >= 128)) {
+      // `relatedOrigins` is `true` on Safari 18+ and Chromium 128+
+      if ((isSafari && browserVer >= 18) ||
+          (engineName === 'Blink' && engineVer >= 128)) {
         relatedOrigins = true;
       }
       return {
