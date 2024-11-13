@@ -1,0 +1,48 @@
+name: CI Checks
+
+on:
+  push:
+    branches: [master, beta]
+  pull_request:
+    branches: [master, beta]
+
+jobs:
+  unit_tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        deno-version: ["v2.0.x"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Install Deno
+      - name: Setup Deno ${{ matrix.deno-version }}
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: ${{ matrix.deno-version }}
+      - name: Confirm installed Deno version
+        run: deno -V
+
+      # Set up caching for quicker installs
+      - name: Get DENO_DIR store directory
+        shell: bash
+        # Expecting "DENO_DIR location: /Users/matt/Library/Caches/deno" somewhere in `deno info`
+        run: |
+          echo "DENO_DIR=$(deno info | grep "DENO_DIR" | awk '{print $3}')" >> $GITHUB_ENV
+      - name: Setup Deno cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.DENO_DIR }}
+          key: ${{ runner.os }}-deno-dir-${{ hashFiles('**/deno.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-deno-dir-
+
+      # Install deps
+      - name: Install dependencies
+        run: deno install
+
+      # Build and test packages
+      - name: Run Unit Tests
+        run: deno task test
