@@ -36,11 +36,17 @@ $ deno task test:watch
 
 ## Publishing
 
+🚨 **Increment `"version"` in deno.json before proceeding!** 🚨
+
+### NPM
+
 To publish to NPM, run the following command:
 
 ```sh
 $ deno task publish:npm
 ```
+
+### JSR
 
 The following command will publish to JSR.io:
 
