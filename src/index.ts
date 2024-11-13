@@ -1,34 +1,27 @@
+// @deno-types="npm:@types/ua-parser-js@^0.7.39"
 import { UAParser } from 'ua-parser-js';
+import type {
+  PublicKeyCredentialCreationOptionsJSON,
+  PublicKeyCredentialRequestOptionsJSON,
+} from '@simplewebauthn/types';
+
+import { Base64URL } from './base64url.ts';
 
 /**
- * Encode given buffer or decode given string with Base64URL.
+ * Make sure at least PublicKeyCredential is defined before trying to polyfill anything on it
  */
-class base64url {
-  static encode(buffer: ArrayBuffer): string {
-    const base64 = window.btoa(String.fromCharCode(...new Uint8Array(buffer)));
-    return base64.replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
-  }
-
-  static decode(base64url: string): ArrayBuffer {
-    const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
-    const binStr = window.atob(base64);
-    const bin = new Uint8Array(binStr.length);
-    for (let i = 0; i < binStr.length; i++) {
-      bin[i] = binStr.charCodeAt(i);
-    }
-    return bin.buffer;
-  }
-}
-
-if (PublicKeyCredential) {
+if (globalThis.PublicKeyCredential) {
   const uap = new UAParser();
   const browser = uap.getBrowser();
+
   if (!browser?.major || !browser?.name) {
     throw new Error('Browser major version not found.');
   }
+
   const browserName = browser.name;
   const browserVer = parseInt(browser.major);
   const engine = uap.getEngine();
+
   const isSafari = browserName?.indexOf('Safari') > -1;
 
   if (!engine?.version || !engine?.name) {
@@ -37,181 +30,217 @@ if (PublicKeyCredential) {
   const engineName = engine.name;
   const engineVer = parseInt(engine.version.replace(/^([0-9]+)\.*$/, '$1'));
 
-  // @ts-ignore
-  if (!PublicKeyCredential?.parseCreationOptionsFromJSON) {
-    // @ts-ignore
-    PublicKeyCredential.parseCreationOptionsFromJSON = (
-      options: PublicKeyCredentialCreationOptionsJSON
-    ): PublicKeyCredentialCreationOptions => {
-      const user = {
-        ...options.user,
-        id: base64url.decode(options.user.id),
-      } as PublicKeyCredentialUserEntity;
-      const challenge = base64url.decode(options.challenge);
-      const excludeCredentials =
-        options.excludeCredentials?.map((cred: PublicKeyCredentialDescriptorJSON) => {
+  /**
+   * Polyfill `PublicKeyCredential.parseCreationOptionsFromJSON`
+   *
+   * See https://w3c.github.io/webauthn/#sctn-parseCreationOptionsFromJSON
+   */
+  // @ts-ignore: We're polyfilling this, so ignore whether TS knows about this or not
+  if (!PublicKeyCredential.parseCreationOptionsFromJSON) {
+    Object.defineProperty(PublicKeyCredential, 'parseCreationOptionsFromJSON', {
+      value: (options: PublicKeyCredentialCreationOptionsJSON) => {
+        const user = {
+          ...options.user,
+          id: Base64URL.decode(options.user.id),
+        };
+        const challenge = Base64URL.decode(options.challenge);
+        const excludeCredentials = options.excludeCredentials?.map((cred) => {
           return {
             ...cred,
-            id: base64url.decode(cred.id),
-          } as PublicKeyCredentialDescriptor;
+            id: Base64URL.decode(cred.id),
+            transports: cred.transports as AuthenticatorTransport[] | undefined,
+          };
         }) ?? [];
-      return {
-        ...options,
-        user,
-        challenge,
-        excludeCredentials,
-      } as PublicKeyCredentialCreationOptions;
-    };
-  }
-  // @ts-ignore
-  if (!PublicKeyCredential?.parseRequestOptionsFromJSON) {
-    // @ts-ignore
-    PublicKeyCredential.parseRequestOptionsFromJSON = (
-      options: PublicKeyCredentialRequestOptionsJSON
-    ): PublicKeyCredentialRequestOptions => {
-      const challenge = base64url.decode(options.challenge);
-      const allowCredentials =
-        options.allowCredentials?.map((cred: PublicKeyCredentialDescriptorJSON) => {
-          return {
-            ...cred,
-            id: base64url.decode(cred.id),
-          } as PublicKeyCredentialDescriptor;
-        }) ?? [];
-      return {
-        ...options,
-        allowCredentials,
-        challenge,
-      } as PublicKeyCredentialRequestOptions;
-    };
+
+        const toReturn: PublicKeyCredentialCreationOptions = {
+          ...options,
+          user,
+          challenge,
+          excludeCredentials,
+        };
+
+        return toReturn;
+      },
+    });
   }
 
-  // @ts-ignore
+  /**
+   * Polyfill `PublicKeyCredential.parseRequestOptionsFromJSON`
+   *
+   * See https://w3c.github.io/webauthn/#sctn-parseRequestOptionsFromJSON
+   */
+  // @ts-ignore: We're polyfilling this, so ignore whether TS knows about this or not
+  if (!PublicKeyCredential.parseRequestOptionsFromJSON) {
+    Object.defineProperty(PublicKeyCredential, 'parseRequestOptionsFromJSON', {
+      value: (options: PublicKeyCredentialRequestOptionsJSON) => {
+        const challenge = Base64URL.decode(options.challenge);
+        const allowCredentials = options.allowCredentials?.map((cred) => {
+          return {
+            ...cred,
+            id: Base64URL.decode(cred.id),
+            transports: cred.transports as AuthenticatorTransport[] | undefined,
+          };
+        }) ?? [];
+
+        const toReturn: PublicKeyCredentialRequestOptions = {
+          ...options,
+          allowCredentials,
+          challenge,
+        };
+
+        return toReturn;
+      },
+    });
+  }
+
+  /**
+   * Polyfill `PublicKeyCredential.prototype.toJSON`
+   *
+   * See https://w3c.github.io/webauthn/#dom-publickeycredential-tojson
+   */
+  // @ts-ignore: We're polyfilling this, so ignore whether TS knows about this or not
   if (!PublicKeyCredential.prototype.toJSON) {
-    // @ts-ignore
-    PublicKeyCredential.prototype.toJSON = function(): RegistrationResponseJSON | AuthenticationResponseJSON {
-      try {
-        // @ts-ignore
-        const id = this.id;
-        // @ts-ignore
-        const rawId = base64url.encode(this.rawId);
-        // @ts-ignore
-        const authenticatorAttachment = this.authenticatorAttachment;
-        const clientExtensionResults = {};
-        // @ts-ignore
-        const type = this.type;
-        // This is authentication.
-        // @ts-ignore
-        if (this.response.signature) {
-          return {
-            id,
-            rawId,
-            response: {
-              // @ts-ignore
-              authenticatorData: base64url.encode(this.response.authenticatorData),
-              // @ts-ignore
-              clientDataJSON: base64url.encode(this.response.clientDataJSON),
-              // @ts-ignore
-              signature: base64url.encode(this.response.signature),
-              // @ts-ignore
-              userHandle: base64url.encode(this.response.userHandle),
-            } as AuthenticatorAssertionResponseJSON,
-            authenticatorAttachment,
-            clientExtensionResults,
-            type,
-          } as AuthenticationResponseJSON;
-        } else {
-          return {
-            id,
-            rawId,
-            response: {
-              // @ts-ignore
-              clientDataJSON: base64url.encode(this.response.clientDataJSON),
-              // @ts-ignore
-              attestationObject: base64url.encode(this.response.attestationObject),
-              // @ts-ignore
-              transports: this.response?.getTransports() || [],
-            } as AuthenticatorAttestationResponseJSON,
-            authenticatorAttachment,
-            clientExtensionResults,
-            type,
-          } as RegistrationResponseJSON;
+    Object.defineProperty(PublicKeyCredential.prototype, 'toJSON', {
+      value: function () {
+        try {
+          const id = this.id;
+          const rawId = Base64URL.encode(this.rawId);
+          const authenticatorAttachment = this.authenticatorAttachment;
+          const clientExtensionResults = {};
+          const type = this.type;
+          // This is authentication.
+          if (this.response.signature) {
+            return {
+              id,
+              rawId,
+              response: {
+                authenticatorData: Base64URL.encode(
+                  this.response.authenticatorData,
+                ),
+                clientDataJSON: Base64URL.encode(
+                  this.response.clientDataJSON,
+                ),
+                signature: Base64URL.encode(this.response.signature),
+                userHandle: Base64URL.encode(this.response.userHandle),
+              },
+              authenticatorAttachment,
+              clientExtensionResults,
+              type,
+            };
+          } else {
+            return {
+              id,
+              rawId,
+              response: {
+                clientDataJSON: Base64URL.encode(
+                  this.response.clientDataJSON,
+                ),
+                attestationObject: Base64URL.encode(
+                  this.response.attestationObject,
+                ),
+                transports: this.response?.getTransports() || [],
+              },
+              authenticatorAttachment,
+              clientExtensionResults,
+              type,
+            };
+          }
+        } catch (error) {
+          console.error(error);
+          throw error;
         }
-      } catch (error) {
-        console.error(error);
-        throw error;
-      }
-    }
+      },
+    });
   }
-  
-  // @ts-ignore
-  if (!PublicKeyCredential.getClientCapabilities ||
-      (isSafari && browserVer >= 17.4)) {
-    // @ts-ignore
-    PublicKeyCredential.getClientCapabilities = async (): Promise<ClientCapabilities> => {
-      let conditionalCreate = false;
-      let conditionalGet = false;
-      let hybridTransport = false;
-      let passkeyPlatformAuthenticator = false;
-      let userVerifyingPlatformAuthenticator = false;
-      let relatedOrigins = false;
-      let signalAllAcceptedCredentials = false;
-      let signalCurrentUserDetails = false;
-      let signalUnknownCredential = false;
-      if (PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable &&
-          PublicKeyCredential.isConditionalMediationAvailable) {
-        // Are UVPAA and conditional UI available on this browser?
-        const results = await Promise.all([
-          PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable(),
-          PublicKeyCredential.isConditionalMediationAvailable()
-        ]);
-        userVerifyingPlatformAuthenticator = results[0];
-        conditionalGet = results[1];
-      }
-      // @ts-ignore
-      if (PublicKeyCredential.signalAllAcceptedCredentials) {
-        signalAllAcceptedCredentials = true;
-      }
-      // @ts-ignore
-      if (PublicKeyCredential.signalCurrentUserDetails) {
-        signalCurrentUserDetails = true;
-      }
-      // @ts-ignore
-      if (PublicKeyCredential.signalUknownCredential) {
-        signalUnknownCredential = true;
-      }
 
-      // `conditionalCreate` is `true` on Safari 18+
-      if (isSafari && browserVer >= 18) {
-        conditionalCreate = true;
-      }
-      // `hybridTransport` is `true` on Firefox 119+, Chromium 108+ and Safari 16+
-      // TODO: These version numbers may not be precise.
-      if ((engineName === 'Blink' && engineVer >= 108) ||
+  /**
+   * Polyfill `PublicKeyCredential.getClientCapabilities`
+   *
+   * See https://w3c.github.io/webauthn/#sctn-getClientCapabilities
+   */
+  if (
+    // @ts-ignore: We're polyfilling this, so ignore whether TS knows about this or not
+    !PublicKeyCredential.getClientCapabilities ||
+    // If this is Safari 17.4+, there's a spec glitch.
+    (isSafari && browserVer >= 17.4)
+  ) {
+    Object.defineProperty(PublicKeyCredential, 'getClientCapabilities', {
+      value: async () => {
+        let conditionalCreate = false;
+        let conditionalGet = false;
+        let hybridTransport = false;
+        let passkeyPlatformAuthenticator = false;
+        let userVerifyingPlatformAuthenticator = false;
+        let relatedOrigins = false;
+        let signalAllAcceptedCredentials = false;
+        let signalCurrentUserDetails = false;
+        let signalUnknownCredential = false;
+
+        if (
+          PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable &&
+          PublicKeyCredential.isConditionalMediationAvailable
+        ) {
+          // Are UVPAA and conditional UI available on this browser?
+          const results = await Promise.all([
+            PublicKeyCredential
+              .isUserVerifyingPlatformAuthenticatorAvailable(),
+            PublicKeyCredential.isConditionalMediationAvailable(),
+          ]);
+          userVerifyingPlatformAuthenticator = results[0];
+          conditionalGet = results[1];
+        }
+
+        // @ts-ignore: It's okay if this doesn't exist
+        if (typeof PublicKeyCredential.signalAllAcceptedCredentials === 'function') {
+          signalAllAcceptedCredentials = true;
+        }
+
+        // @ts-ignore: It's okay if this doesn't exist
+        if (typeof PublicKeyCredential.signalCurrentUserDetails === 'function') {
+          signalCurrentUserDetails = true;
+        }
+
+        // @ts-ignore: It's okay if this doesn't exist
+        if (typeof PublicKeyCredential.signalUknownCredential === 'function') {
+          signalUnknownCredential = true;
+        }
+
+        // `conditionalCreate` is `true` on Safari 15+
+        if (browserName === 'Safari' && browserVer >= 18) {
+          conditionalCreate = true;
+        }
+
+        // `hybridTransport` is `true` on Firefox 119+, Chromium 108+ and Safari 16+
+        if (
+          (engineName === 'Blink' && engineVer >= 108) ||
           (browserName === 'Firefox' && browserVer >= 119) ||
-          (isSafari && browserVer >= 16)) {
-        hybridTransport = true;
-      } 
-      // `passkeyPlatformAuthenticator` is `true` if `hybridTransport` or `userVerifyingPlatformAuthenticator` are `true`.
-      if (hybridTransport || userVerifyingPlatformAuthenticator) {
-        passkeyPlatformAuthenticator = true;
-      }
-      // `relatedOrigins` is `true` on Safari 18+ and Chromium 128+
-      if ((isSafari && browserVer >= 18) ||
-          (engineName === 'Blink' && engineVer >= 128)) {
-        relatedOrigins = true;
-      }
-      return {
-        conditionalCreate,
-        conditionalGet,
-        hybridTransport,
-        passkeyPlatformAuthenticator,
-        userVerifyingPlatformAuthenticator,
-        relatedOrigins,
-        signalAllAcceptedCredentials,
-        signalCurrentUserDetails,
-        signalUnknownCredential
-      } as ClientCapabilities;
-    };
+          (browserName === 'Safari' && browserVer >= 16)
+        ) {
+          hybridTransport = true;
+        }
+
+        // `passkeyPlatformAuthenticator` is `true` if `hybridTransport` or `userVerifyingPlatformAuthenticator` is `true`.
+        if (hybridTransport || userVerifyingPlatformAuthenticator) {
+          passkeyPlatformAuthenticator = true;
+        }
+
+        // `relatedOrigins` is `true` on Chromium 128+
+        if ((engineName === 'Blink' && engineVer >= 128)) {
+          relatedOrigins = true;
+        }
+
+        return {
+          conditionalCreate,
+          conditionalGet,
+          hybridTransport,
+          passkeyPlatformAuthenticator,
+          relatedOrigins,
+          signalAllAcceptedCredentials,
+          signalCurrentUserDetails,
+          signalUnknownCredential,
+          userVerifyingPlatformAuthenticator,
+        };
+      },
+    });
   }
 }
-

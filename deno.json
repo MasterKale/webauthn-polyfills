@@ -1,0 +1,31 @@
+{
+  "name": "@passkeys/webauthn-polyfills",
+  "version": "0.1.0",
+  "exports": "./src/index.ts",
+  "tasks": {
+    "test": "deno test src/",
+    "test:watch": "deno test --watch src/",
+    "build": "deno -A build_npm.ts",
+    "publish:jsr": "deno publish",
+    "publish:npm": "deno task build && (cd npm/; npm publish)"
+  },
+  "imports": {
+    "@deno/dnt": "jsr:@deno/dnt@^0.41.3",
+    "@simplewebauthn/types": "npm:@simplewebauthn/types@^11.0.0",
+    "@std/assert": "jsr:@std/assert@^1.0.7",
+    "@std/testing": "jsr:@std/testing@^1.0.4",
+    "@types/ua-parser-js": "npm:@types/ua-parser-js@^0.7.39",
+    "ua-parser-js": "npm:ua-parser-js@^1.0.39"
+  },
+  "fmt": {
+    "singleQuote": true,
+    "semiColons": true,
+    "lineWidth": 100
+  },
+  "compilerOptions": {
+    "lib": [
+      "DOM",
+      "ES2022"
+    ]
+  }
+}
