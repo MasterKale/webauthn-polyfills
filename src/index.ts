@@ -224,8 +224,9 @@ if (globalThis.PublicKeyCredential) {
           passkeyPlatformAuthenticator = true;
         }
 
-        // `relatedOrigins` is `true` on Chromium 128+
-        if ((engineName === 'Blink' && engineVer >= 128)) {
+        // `relatedOrigins` is `true` on Chromium 128+ or Safari 18+
+        if ((engineName === 'Blink' && engineVer >= 128) ||
+            (isSafari && browserVer >= 18)) {
           relatedOrigins = true;
         }
 
