@@ -18,20 +18,16 @@ if (globalThis.PublicKeyCredential) {
   }
 
   const browserName = browser.name;
-  const browserVer = parseFloat(
-    browser.version.replace(/^([0-9]+\.[0-9]+).*$/, '$1'),
-  );
+  const browserVer = parseInt(browser.major);
   const engine = uap.getEngine();
+
   const isSafari = browserName?.indexOf('Safari') > -1;
 
   if (!engine?.version || !engine?.name) {
     throw new Error('Engine version not found.');
   }
-
   const engineName = engine.name;
-  const engineVer = parseFloat(
-    engine.version.replace(/^([0-9]+\.[0-9]+)\.*$/, '$1'),
-  );
+  const engineVer = parseInt(engine.version.replace(/^([0-9]+)\.*$/, '$1'));
 
   /**
    * Polyfill `PublicKeyCredential.parseCreationOptionsFromJSON`
