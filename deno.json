@@ -1,6 +1,10 @@
 {
   "tasks": {
-    "dev": "deno run --watch main.ts"
+    "test": "deno test src/",
+    "test:watch": "deno test --watch src/",
+    "build": "deno -A build_npm.ts",
+    "publish:jsr": "deno publish",
+    "publish:npm": "deno task build && (cd npm/; npm publish)"
   },
   "imports": {
     "@deno/dnt": "jsr:@deno/dnt@^0.41.3",
