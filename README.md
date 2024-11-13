@@ -1,6 +1,8 @@
 # webauthn-polyfills
 
-## Contributions
+Polyfills for advanced WebAuthn methods not yet supported in evergreen browsers
+
+## Contributing
 
 **Requirements:**
 

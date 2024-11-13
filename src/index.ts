@@ -1,3 +1,4 @@
+// @deno-types="npm:@types/ua-parser-js@^0.7.39"
 import { UAParser } from 'ua-parser-js';
 import type {
   PublicKeyCredentialCreationOptionsJSON,
