@@ -13,8 +13,8 @@ npm install webauthn-polyfills
 This package is also available from JSR.io:
 
 ```
-npx jsr add webauthn-polyfills
-deno add jsr:webauthn-polyfills
+npx jsr add @passkeys/webauthn-polyfills
+deno add jsr:@passkeys/webauthn-polyfills
 ```
 
 ## Contributing
