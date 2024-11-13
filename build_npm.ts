@@ -3,6 +3,10 @@ import { build, emptyDir } from '@deno/dnt';
 
 const outDir = './npm';
 
+const denoJSON: { version: string } = JSON.parse(
+  Deno.readTextFileSync('./deno.json'),
+);
+
 await emptyDir(outDir);
 
 await build({
@@ -20,7 +24,7 @@ await build({
   package: {
     // package.json properties
     name: 'webauthn-polyfills',
-    version: '1.0.0',
+    version: denoJSON.version,
     description: 'Polyfills for advanced WebAuthn methods not yet supported in evergreen browsers',
     license: 'Apache-2.0',
     repository: {

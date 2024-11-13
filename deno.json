@@ -1,4 +1,7 @@
 {
+  "name": "@passkeys/webauthn-polyfills",
+  "version": "0.1.0",
+  "exports": "./src/index.ts",
   "tasks": {
     "test": "deno test src/",
     "test:watch": "deno test --watch src/",
