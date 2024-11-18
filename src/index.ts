@@ -168,13 +168,16 @@ if (globalThis.PublicKeyCredential) {
       value: async () => {
         let conditionalCreate = false;
         let conditionalGet = false;
-        let hybridTransport = false;
+        let hybridTransport = undefined;
         let passkeyPlatformAuthenticator = false;
         let userVerifyingPlatformAuthenticator = false;
         let relatedOrigins = false;
         let signalAllAcceptedCredentials = false;
         let signalCurrentUserDetails = false;
         let signalUnknownCredential = false;
+
+        // @ts-ignore: We're polyfilling this, so ignore whether TS knows about this or not
+        const capabilities = PublicKeyCredential.getClientCapabilities && await PublicKeyCredential.getClientCapabilities();
 
         if (
           PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable &&
@@ -211,12 +214,8 @@ if (globalThis.PublicKeyCredential) {
         }
 
         // `hybridTransport` is `true` on Firefox 119+, Chromium 108+ and Safari 16+
-        if (
-          (engineName === 'Blink' && engineVer >= 108) ||
-          (browserName === 'Firefox' && browserVer >= 119) ||
-          (browserName === 'Safari' && browserVer >= 16)
-        ) {
-          hybridTransport = true;
+        if (capabilities) {
+          hybridTransport = capabilities.hybridTransport;
         }
 
         // `passkeyPlatformAuthenticator` is `true` if `hybridTransport` or `userVerifyingPlatformAuthenticator` is `true`.
