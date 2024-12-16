@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.2
+
+### Changes
+
+- Updated iOS browser detection ([#6](https://github.com/MasterKale/webauthn-polyfills/pull/6))
+
 ## v0.1.1
 
 ### Changes
