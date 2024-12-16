@@ -22,13 +22,13 @@ if (globalThis.PublicKeyCredential) {
   const browserVer = parseInt(browser.major);
   const engine = uap.getEngine();
 
-  const isSafari = browserName?.indexOf('Safari') > -1;
-
   if (!engine?.version || !engine?.name) {
     throw new Error('Engine version not found.');
   }
   const engineName = engine.name;
   const engineVer = parseInt(engine.version.replace(/^([0-9]+)\.*$/, '$1'));
+
+  const isWebkit = engineName?.indexOf('WebKit') > -1;
 
   /**
    * Polyfill `PublicKeyCredential.parseCreationOptionsFromJSON`
@@ -162,7 +162,7 @@ if (globalThis.PublicKeyCredential) {
     // @ts-ignore: We're polyfilling this, so ignore whether TS knows about this or not
     !PublicKeyCredential.getClientCapabilities ||
     // If this is Safari 17.4+, there's a spec glitch.
-    (isSafari && browserVer >= 17.4)
+    (isWebkit && browserVer >= 17.4)
   ) {
     Object.defineProperty(PublicKeyCredential, 'getClientCapabilities', {
       value: async () => {
@@ -226,7 +226,7 @@ if (globalThis.PublicKeyCredential) {
 
         // `relatedOrigins` is `true` on Chromium 128+ or Safari 18+
         if ((engineName === 'Blink' && engineVer >= 128) ||
-            (isSafari && browserVer >= 18)) {
+            (isWebkit && browserVer >= 18)) {
           relatedOrigins = true;
         }
 
