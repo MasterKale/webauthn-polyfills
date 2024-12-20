@@ -13,22 +13,30 @@ import { Base64URL } from './base64url.ts';
 if (globalThis.PublicKeyCredential) {
   const uap = new UAParser();
   const browser = uap.getBrowser();
-
   if (!browser?.major || !browser?.name) {
     throw new Error('Browser major version not found.');
   }
 
-  const browserName = browser.name;
-  const browserVer = parseInt(browser.major);
   const engine = uap.getEngine();
-
   if (!engine?.version || !engine?.name) {
     throw new Error('Engine version not found.');
   }
+
+  const os = uap.getOS();
+  if (!os?.version || !os?.name) {
+    throw new Error('OS version not found.');
+  }
+
+  const browserName = browser.name;
+  const browserVer = parseInt(browser.major);
+
   const engineName = engine.name;
   const engineVer = parseInt(engine.version.replace(/^([0-9]+)\.*$/, '$1'));
 
-  const isWebkit = engineName?.indexOf('WebKit') > -1;
+  const osName = os.name;
+  const osVer = parseInt(os.version.replace(/^([0-9]+)\.*$/, '$1'));
+
+  const isIOS = osName === 'iOS';
 
   /**
    * Polyfill `PublicKeyCredential.parseCreationOptionsFromJSON`
@@ -161,18 +169,18 @@ if (globalThis.PublicKeyCredential) {
   if (
     // @ts-ignore: We're polyfilling this, so ignore whether TS knows about this or not
     !PublicKeyCredential.getClientCapabilities ||
-    // If this is Safari 17.4+, there's a spec glitch.
-    (isWebkit && browserVer >= 17.4)
+    // If this is above iOS 17.4 and below iOS 18.2, there's a spec glitch.
+    ((isIOS && osVer >= 17.4) && (isIOS && osVer < 18.2))
   ) {
     Object.defineProperty(PublicKeyCredential, 'getClientCapabilities', {
       value: async () => {
         let conditionalCreate = false;
         let conditionalGet = false;
-        let userVerifyingPlatformAuthenticator = false;
         let relatedOrigins = false;
         let signalAllAcceptedCredentials = false;
         let signalCurrentUserDetails = false;
         let signalUnknownCredential = false;
+        let userVerifyingPlatformAuthenticator = false;
 
         if (
           PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable &&
@@ -203,14 +211,16 @@ if (globalThis.PublicKeyCredential) {
           signalUnknownCredential = true;
         }
 
-        // `conditionalCreate` is `true` on Safari 15+
-        if (browserName === 'Safari' && browserVer >= 18) {
+        // `conditionalCreate` is `true` on Safari 18+
+        if (isIOS && osVer >= 18) {
           conditionalCreate = true;
         }
 
         // `relatedOrigins` is `true` on Chromium 128+ or Safari 18+
-        if ((engineName === 'Blink' && engineVer >= 128) ||
-            (isWebkit && browserVer >= 18)) {
+        if (
+          (engineName === 'Blink' && engineVer >= 128) ||
+          (isIOS && osVer >= 18)
+        ) {
           relatedOrigins = true;
         }
 
