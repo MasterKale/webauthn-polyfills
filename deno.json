@@ -6,8 +6,18 @@
     "test": "deno test src/",
     "test:watch": "deno test --watch src/",
     "build": "deno -A build_npm.ts",
-    "publish:jsr": "deno publish",
-    "publish:npm": "deno task build && (cd npm/; npm publish)"
+    "publish:jsr": {
+      "command": "deno publish",
+      "dependencies": [
+        "build"
+      ]
+    },
+    "publish:npm": {
+      "command": "deno task build && (cd npm/; npm publish)",
+      "dependencies": [
+        "build"
+      ]
+    }
   },
   "imports": {
     "@deno/dnt": "jsr:@deno/dnt@^0.41.3",
