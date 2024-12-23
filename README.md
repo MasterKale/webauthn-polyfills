@@ -5,6 +5,24 @@ Polyfills for advanced WebAuthn methods not yet supported in evergreen browsers.
 A polyfill is a piece of code used to provide modern functionality on older
 browsers that do not natively support it.
 
+## Installation
+
+This package can be installed from NPM:
+
+```
+npm install webauthn-polyfills
+```
+
+This package is also available from JSR.io:
+
+```
+deno add jsr:@passkeys/webauthn-polyfills
+```
+
+```
+npx jsr add @passkeys/webauthn-polyfills
+```
+
 ## Supported APIs
 
 Just by importing webauthn-polyfills, your WebAuthn implementation will get the
@@ -39,26 +57,11 @@ workflows based on the client's specific functionality. Expected results include
 
 This polyfill returns static results based on the user agent information.
 
-## Installation
-
-This package can be installed from NPM:
-
-```
-npm install webauthn-polyfills
-```
-
-This package is also available from JSR.io:
-
-```
-npx jsr add @passkeys/webauthn-polyfills
-deno add jsr:@passkeys/webauthn-polyfills
-```
-
 ## Contributing
 
 **Requirements:**
 
-- Deno v2.0.x
+- Deno v2.1.x
 
 ```sh
 # Install dependencies
@@ -80,7 +83,7 @@ $ deno task test:watch
 To publish to NPM, run the following command:
 
 ```sh
-$ deno task publish:npm
+deno task publish:npm
 ```
 
 ### JSR
@@ -88,5 +91,5 @@ $ deno task publish:npm
 The following command will publish to JSR.io:
 
 ```sh
-$ deno task publish:jsr
+deno task publish:jsr
 ```
