@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.4
+
+- Fixed the "Maximum call stack size exceeded" error in Safari ([#7](https://github.com/MasterKale/webauthn-polyfills/pull/7))
+
 ## v0.1.3
 
 - `hybridTransport` will now return `undefined` instead of `false` ([#4](https://github.com/MasterKale/webauthn-polyfills/pull/4))
