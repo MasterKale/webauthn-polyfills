@@ -24,7 +24,9 @@
     "@simplewebauthn/types": "npm:@simplewebauthn/types@^11.0.0",
     "@std/assert": "jsr:@std/assert@^1.0.7",
     "@std/testing": "jsr:@std/testing@^1.0.4",
+    "@types/compare-versions": "npm:@types/compare-versions@^3.3.3",
     "@types/ua-parser-js": "npm:@types/ua-parser-js@^0.7.39",
+    "compare-versions": "npm:compare-versions@^6.1.1",
     "ua-parser-js": "npm:ua-parser-js@^1.0.39"
   },
   "fmt": {
