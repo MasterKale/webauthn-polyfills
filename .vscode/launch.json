@@ -6,17 +6,17 @@
   "configurations": [
     {
       "request": "launch",
-      "name": "Launch Program",
+      "name": "Debug tests",
       "type": "node",
-      "program": "${workspaceFolder}/src/is_version.test.ts",
+      // "program": "${workspaceFolder}/src/is_version.test.ts",
       "cwd": "${workspaceFolder}",
-      "env": {},
+      // "env": {},
       "runtimeExecutable": "/Users/agektmr/.deno/bin/deno",
       "runtimeArgs": [
         "test",
-        "--unstable",
+        // "--unstable",
         "--inspect-wait",
-        "--allow-all"
+        // "--allow-all"
       ],
       "attachSimplePort": 9229
     }

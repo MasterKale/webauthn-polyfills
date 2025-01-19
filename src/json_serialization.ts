@@ -1,5 +1,6 @@
 import type {
   AuthenticationResponseJSON,
+  AuthenticatorAssertionResponse,
   AuthenticatorAssertionResponseJSON,
   AuthenticatorAttestationResponseJSON,
   PublicKeyCredentialCreationOptionsJSON,
@@ -10,31 +11,63 @@ import type {
 
 import { Base64URL } from './base64url.ts';
 
+function isAuthenticatorAssertionResponse(
+  value: AuthenticatorResponse,
+): value is AuthenticatorAssertionResponse {
+  if (typeof value !== 'object') {
+    return false;
+  }
+  if (
+    (value as AuthenticatorAssertionResponse)?.authenticatorData === undefined ||
+    typeof (value as AuthenticatorAssertionResponse)?.authenticatorData !== 'object'
+  ) {
+    return false;
+  }
+  return true;
+}
+
+function isAuthenticatorAttestationResponse(
+  value: AuthenticatorResponse,
+): value is AuthenticatorAttestationResponse {
+  if (typeof value !== 'object') {
+    return false;
+  }
+  if (
+    (value as AuthenticatorAttestationResponse)?.attestationObject === undefined ||
+    typeof (value as AuthenticatorAttestationResponse)?.attestationObject !== 'object'
+  ) {
+    return false;
+  }
+  return true;
+}
+
 /**
  * Polyfill `PublicKeyCredential.parseCreationOptionsFromJSON`
  *
  * See https://w3c.github.io/webauthn/#sctn-parseCreationOptionsFromJSON
  */
-export function parseCreationOptionsFromJSON(options: PublicKeyCredentialCreationOptionsJSON) {
+export function parseCreationOptionsFromJSON(
+  options: PublicKeyCredentialCreationOptionsJSON,
+): PublicKeyCredentialCreationOptions {
   const user = {
     ...options.user,
     id: Base64URL.decode(options.user.id),
-  };
+  } as PublicKeyCredentialUserEntity;
   const challenge = Base64URL.decode(options.challenge);
   const excludeCredentials = options.excludeCredentials?.map((cred) => {
     return {
       ...cred,
       id: Base64URL.decode(cred.id),
       transports: cred.transports as AuthenticatorTransport[] | undefined,
-    };
+    } as PublicKeyCredentialDescriptor;
   }) ?? [];
 
-  const toReturn: PublicKeyCredentialCreationOptions = {
+  const toReturn = {
     ...options,
     user,
     challenge,
     excludeCredentials,
-  };
+  } as PublicKeyCredentialCreationOptions;
 
   return toReturn;
 }
@@ -44,21 +77,23 @@ export function parseCreationOptionsFromJSON(options: PublicKeyCredentialCreatio
  *
  * See https://w3c.github.io/webauthn/#sctn-parseRequestOptionsFromJSON
  */
-export function parseRequestOptionsFromJSON(options: PublicKeyCredentialRequestOptionsJSON) {
-  const challenge = Base64URL.decode(options.challenge);
+export function parseRequestOptionsFromJSON(
+  options: PublicKeyCredentialRequestOptionsJSON,
+): PublicKeyCredentialRequestOptions {
+  const challenge = Base64URL.decode(options.challenge) as ArrayBuffer;
   const allowCredentials = options.allowCredentials?.map((cred) => {
     return {
       ...cred,
-      id: Base64URL.decode(cred.id),
+      id: Base64URL.decode(cred.id) as ArrayBuffer,
       transports: cred.transports as AuthenticatorTransport[] | undefined,
-    };
+    } as PublicKeyCredentialDescriptor;
   }) ?? [];
 
-  const toReturn: PublicKeyCredentialRequestOptions = {
+  const toReturn = {
     ...options,
     allowCredentials,
     challenge,
-  };
+  } as PublicKeyCredentialRequestOptions;
 
   return toReturn;
 }
@@ -77,8 +112,9 @@ export function toJSON(
     const authenticatorAttachment = this.authenticatorAttachment;
     const clientExtensionResults = {};
     const type = this.type;
+
     // This is authentication.
-    if (this.response instanceof AuthenticatorAssertionResponse) {
+    if (isAuthenticatorAssertionResponse(this.response)) {
       return {
         id,
         rawId,
@@ -100,8 +136,8 @@ export function toJSON(
       } as AuthenticationResponseJSON;
     }
 
-    // This is registration.
-    if (this.response instanceof AuthenticatorAttestationResponse) {
+    if (isAuthenticatorAttestationResponse(this.response)) {
+      // This is registration.
       return {
         id,
         rawId,

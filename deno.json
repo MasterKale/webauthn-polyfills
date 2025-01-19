@@ -35,9 +35,6 @@
     "lineWidth": 100
   },
   "compilerOptions": {
-    "lib": [
-      "DOM",
-      "ES2022"
-    ]
+    "lib": ["DOM", "ES2022"]
   }
 }
