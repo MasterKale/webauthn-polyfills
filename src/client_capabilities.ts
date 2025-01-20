@@ -7,7 +7,6 @@ export function prepareGetClientCapabilities(ua: string = '') {
      * Make sure at least PublicKeyCredential is defined before trying to polyfill anything on it
      */
     version = new isVersion(ua);
-    console.log(version);
   } catch {
     console.info('expected exception for the test.');
   }
@@ -32,8 +31,6 @@ export function prepareGetClientCapabilities(ua: string = '') {
       // @ts-ignore: We're polyfilling this, so ignore whether TS knows about this or not
       ? await PublicKeyCredential.getClientCapabilities()
       : undefined;
-
-    console.log(capabilities);
 
     if (PublicKeyCredential?.isUserVerifyingPlatformAuthenticatorAvailable) {
       // Are UVPAA and conditional UI available on this browser?
@@ -67,13 +64,18 @@ export function prepareGetClientCapabilities(ua: string = '') {
     }
 
     // `conditionalCreate` is `true` on Safari 18+
-    conditionalCreate = capabilities?.conditionalCreate || version.iOS18OrLater ? true : false;
+    conditionalCreate = capabilities !== undefined
+      ? capabilities?.conditionalCreate
+      : version.iOS18OrLater
+      ? true
+      : false;
 
     // `relatedOrigins` is `true` on Chromium 128+ or Safari 18+
-    relatedOrigins =
-      capabilities?.relatedOrigins || (version.blink128OrLater || version.iOS18OrLater)
-        ? true
-        : false;
+    relatedOrigins = capabilities !== undefined
+      ? capabilities?.relatedOrigins
+      : version.blink128OrLater || version.iOS18OrLater
+      ? true
+      : false;
 
     return Promise.resolve({
       conditionalCreate,

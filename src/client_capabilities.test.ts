@@ -36,7 +36,6 @@ describe('getClientCapabilities', () => {
   it('iOS 17.5 Safari 17.5 returns all `false` and `undefined`', async () => {
     const getClientCapabilities = prepareGetClientCapabilities(ua);
     const capabilities = await getClientCapabilities();
-    console.log(capabilities);
     assertObjectMatch(capabilities, {
       conditionalCreate: true,
       conditionalGet: true,
