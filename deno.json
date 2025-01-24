@@ -1,6 +1,6 @@
 {
   "name": "@passkeys/webauthn-polyfills",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "exports": "./src/index.ts",
   "tasks": {
     "test": "deno test src/",
@@ -35,6 +35,9 @@
     "lineWidth": 100
   },
   "compilerOptions": {
-    "lib": ["DOM", "ES2022"]
+    "lib": [
+      "DOM",
+      "ES2022"
+    ]
   }
 }
