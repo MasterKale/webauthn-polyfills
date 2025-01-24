@@ -30,6 +30,7 @@
     "jsr:@ts-morph/common@0.24": "0.24.0",
     "npm:@simplewebauthn/types@11": "11.0.0",
     "npm:@types/ua-parser-js@~0.7.39": "0.7.39",
+    "npm:compare-versions@^6.1.1": "6.1.1",
     "npm:ua-parser-js@^1.0.39": "1.0.39"
   },
   "jsr": {
@@ -162,6 +163,9 @@
     "@types/ua-parser-js@0.7.39": {
       "integrity": "sha512-P/oDfpofrdtF5xw433SPALpdSchtJmY7nsJItf8h3KXqOslkbySh8zq4dSWXH2oTjRvJ5PczVEoCZPow6GicLg=="
     },
+    "compare-versions@6.1.1": {
+      "integrity": "sha512-4hm4VPpIecmlg59CHXnRDnqGplJFrbLG4aFEl5vl6cK1u76ws3LLvX7ikFnTDl5vo39sjWD6AaDPYodJp/NNHg=="
+    },
     "ua-parser-js@1.0.39": {
       "integrity": "sha512-k24RCVWlEcjkdOxYmVJgeD/0a1TiSpqLg+ZalVGV9lsnr4yqu0w7tX/x2xX6G4zpkgQnRf89lxuZ1wsbjXM8lw=="
     }
@@ -172,7 +176,9 @@
       "jsr:@std/assert@^1.0.7",
       "jsr:@std/testing@^1.0.4",
       "npm:@simplewebauthn/types@11",
+      "npm:@types/compare-versions@^3.3.3",
       "npm:@types/ua-parser-js@~0.7.39",
+      "npm:compare-versions@^6.1.1",
       "npm:ua-parser-js@^1.0.39"
     ]
   }

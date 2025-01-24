@@ -55,7 +55,8 @@ workflows based on the client's specific functionality. Expected results include
 
 - [`PublicKeyCredential.getClientCapabilities`](https://www.corbado.com/blog/webauthn-client-capabilities)
 
-This polyfill returns static results based on the user agent information.
+This polyfill returns static results based on the user agent information except
+for `hybridTransport` and `passkeyPlatformAuthenticaator`.
 
 ## Contributing
 
