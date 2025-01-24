@@ -18,6 +18,7 @@ await build({
       test: 'dev',
     },
   },
+  test: false,
   compilerOptions: {
     lib: ['ESNext', 'DOM'],
   },

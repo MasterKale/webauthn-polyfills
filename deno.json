@@ -5,7 +5,12 @@
   "tasks": {
     "test": "deno test src/",
     "test:watch": "deno test --watch src/",
-    "build": "deno -A build_npm.ts",
+    "build": {
+      "command": "deno -A build_npm.ts",
+      "dependencies": [
+        "test"
+      ]
+    },
     "publish:jsr": {
       "command": "deno publish",
       "dependencies": [
