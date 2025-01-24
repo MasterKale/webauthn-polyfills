@@ -33,7 +33,7 @@ describe('getClientCapabilities', () => {
     return Promise.resolve(true);
   };
 
-  it('iOS 17.5 Safari 17.5 returns all `false` and `undefined`', async () => {
+  it('iOS 17.5 Safari 17.5 returns `conditionalGet` instead of `conditionalMediation`', async () => {
     const getClientCapabilities = prepareGetClientCapabilities(ua);
     const capabilities = await getClientCapabilities();
     assertObjectMatch(capabilities, {

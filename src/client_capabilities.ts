@@ -26,7 +26,9 @@ export function prepareGetClientCapabilities(ua: string = '') {
     let signalUnknownCredential: boolean | undefined = false;
     let userVerifyingPlatformAuthenticator: boolean | undefined = false;
 
-    // If this is above macOS Safari 17.4 and below Safari 18.2, or above iOS 17.4 and below iOS 18.2, there's a spec glitch.
+    // If this is above macOS Safari 17.4 and below Safari 18.2, or above iOS
+    // 17.4 and below iOS 18.2, replace `conditionalMediation` with `conditionalGet`.
+    // To do so, copy the result and apply it to the polyfill.
     const capabilities = version.safari174To182 || version.iOS174To182
       // @ts-ignore: We're polyfilling this, so ignore whether TS knows about this or not
       ? await PublicKeyCredential.getClientCapabilities()
