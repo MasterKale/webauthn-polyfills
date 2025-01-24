@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.5
+
+- Reorganized some internals and added tests ([#8](https://github.com/MasterKale/webauthn-polyfills/pull/8))
+
 ## v0.1.4
 
 - Fixed the "Maximum call stack size exceeded" error in Safari ([#7](https://github.com/MasterKale/webauthn-polyfills/pull/7))
