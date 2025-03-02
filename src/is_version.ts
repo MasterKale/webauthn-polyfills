@@ -6,7 +6,8 @@ export class isVersion {
   public iOS174To182: boolean;
   public safari174To182: boolean;
   public iOS18OrLater: boolean;
-  public blink128OrLater: boolean;
+  public desktopBlink128OrLater: boolean;
+  public desktopBlink135OrLater: boolean;
 
   constructor(ua?: string) {
     const { browser, engine, os } = UAParser(ua);
@@ -23,17 +24,26 @@ export class isVersion {
       throw new Error('OS version not found.');
     }
 
+    // Between iOS 17.4 and 18.2
     this.iOS174To182 = os.name === 'iOS' &&
       compare(os.version, '17.4', '>=') &&
       compare(os.version, '18.2', '<');
 
+    // Between macOS Safari 17.4 and 18.2
     this.safari174To182 = os.name === 'Mac OS' &&
       browser.name === 'Safari' &&
       compare(browser.version, '17.4', '>=') &&
       compare(browser.version, '18.2', '<');
 
+    // iOS 18 or later
     this.iOS18OrLater = os.name === 'iOS' && compare(os.version, '18', '>=');
-
-    this.blink128OrLater = engine.name === 'Blink' && compare(engine.version, '128', '>=');
+    // Blink 128 or later
+    this.desktopBlink128OrLater = engine.name === 'Blink' &&
+      ['macOS', 'Windows', 'Linux', 'Chrome OS'].includes(os.name) &&
+      compare(engine.version, '128', '>=');
+    // Blink 135 or later
+    this.desktopBlink135OrLater = engine.name === 'Blink' &&
+      ['macOS', 'Windows', 'Linux', 'Chrome OS'].includes(os.name) &&
+      compare(engine.version, '135', '>=');
   }
 }

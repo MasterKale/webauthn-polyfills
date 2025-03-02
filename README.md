@@ -53,7 +53,7 @@ supported by the user's client. The method returns a list of supported
 capabilities, allowing developers to tailor authentication experiences and
 workflows based on the client's specific functionality. Expected results include:
 
-- [`PublicKeyCredential.getClientCapabilities`](https://www.corbado.com/blog/webauthn-client-capabilities)
+- [`PublicKeyCredential.getClientCapabilities`](https://web.dev/articles/webauthn-client-capabilities)
 
 This polyfill returns static results based on the user agent information except
 for `hybridTransport` and `passkeyPlatformAuthenticaator`.
