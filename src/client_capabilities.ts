@@ -1,5 +1,9 @@
 import { isVersion } from './is_version.ts';
 
+declare var PublicKeyCredential: typeof globalThis.PublicKeyCredential & {
+  getClientCapabilities?(): Promise<any>;
+};
+
 export function prepareGetClientCapabilities(ua: string = '') {
   let version: isVersion;
   try {
@@ -93,22 +97,27 @@ export function prepareGetClientCapabilities(ua: string = '') {
   };
 }
 
-/**
- * Make sure at least PublicKeyCredential is defined before trying to polyfill anything on it
- */
-if (globalThis.PublicKeyCredential) {
+export function applyPolyfill(ua: string = '') {
+  /**
+   * Make sure at least PublicKeyCredential is defined before trying to polyfill anything on it
+   */
+  if (!globalThis.PublicKeyCredential) {
+    return;
+  }
+
   // Prepare getClientCapabilities only if `PublicKeyCredential` is available.
-  const getClientCapabilities = prepareGetClientCapabilities();
+  const getClientCapabilities = prepareGetClientCapabilities(ua);
 
   /**
    * Polyfill `PublicKeyCredential.getClientCapabilities`
    *
    * See https://w3c.github.io/webauthn/#sctn-getClientCapabilities
    */
-  // @ts-ignore: We're polyfilling this, so ignore whether TS knows about this or not
   if (!PublicKeyCredential.getClientCapabilities || version.safari174To182 || version.iOS174To182) {
     Object.defineProperty(PublicKeyCredential, 'getClientCapabilities', {
       value: getClientCapabilities,
     });
   }
 }
+
+applyPolyfill();

@@ -1,7 +1,11 @@
 import { assertObjectMatch } from '@std/assert';
 import { describe, it } from '@std/testing/bdd';
 
-import { prepareGetClientCapabilities } from './client_capabilities.ts';
+import { applyPolyfill } from './client_capabilities.ts';
+
+declare var PublicKeyCredential: typeof globalThis.PublicKeyCredential & {
+  getClientCapabilities(): Promise<any>;
+};
 
 // @ts-ignore For test purposes
 globalThis.PublicKeyCredential = {};
@@ -34,8 +38,8 @@ describe('getClientCapabilities', () => {
   };
 
   it('iOS 17.5 Safari 17.5 returns `conditionalGet` instead of `conditionalMediation`', async () => {
-    const getClientCapabilities = prepareGetClientCapabilities(ua);
-    const capabilities = await getClientCapabilities();
+    applyPolyfill(ua);
+    const capabilities = await PublicKeyCredential.getClientCapabilities();
     assertObjectMatch(capabilities, {
       conditionalCreate: true,
       conditionalGet: true,
