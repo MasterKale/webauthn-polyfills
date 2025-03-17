@@ -129,7 +129,7 @@ describe('getClientCapabilities', () => {
       relatedOrigins: true,
       signalAllAcceptedCredentials: true,
       signalCurrentUserDetails: true,
-      signalUnknownCredential: false,
+      signalUnknownCredential: true,
       userVerifyingPlatformAuthenticator: true,
     });
   });

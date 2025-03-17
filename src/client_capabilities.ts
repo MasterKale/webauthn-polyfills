@@ -63,7 +63,7 @@ export function prepareGetClientCapabilities(version: isVersion) {
       }
 
       // @ts-ignore: It's okay if this doesn't exist
-      if (PublicKeyCredential?.signalUknownCredential) {
+      if (PublicKeyCredential?.signalUnknownCredential) {
         signalUnknownCredential = true;
       }
 
