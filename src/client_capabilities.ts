@@ -5,6 +5,8 @@ declare var PublicKeyCredential: typeof globalThis.PublicKeyCredential & {
 };
 
 export function prepareGetClientCapabilities(version: isVersion) {
+  const originalGetClientCapabilities = PublicKeyCredential?.getClientCapabilities;
+
   return async function () {
     let conditionalCreate: boolean | undefined = false;
     let conditionalGet: boolean | undefined = false;
@@ -23,9 +25,8 @@ export function prepareGetClientCapabilities(version: isVersion) {
     // If the browser is above macOS Safari 17.4 and below Safari 18.2, or above
     // iOS 17.4 and below iOS 18.2, replace `conditionalMediation` with
     // `conditionalGet`.
-    if (version.safari174To182 || version.iOS174To182) {
-      // @ts-ignore: We're polyfilling this, so ignore whether TS knows about this or not
-      const capabilities = await PublicKeyCredential.getClientCapabilities();
+    if ((version.safari174To182 || version.iOS174To182) && originalGetClientCapabilities) {
+      const capabilities = await originalGetClientCapabilities();
 
       conditionalCreate = capabilities?.conditionalCreate;
       // Replace `conditionalMediation` with `conditionalGet`.
