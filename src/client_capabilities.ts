@@ -4,17 +4,7 @@ declare var PublicKeyCredential: typeof globalThis.PublicKeyCredential & {
   getClientCapabilities?(): Promise<any>;
 };
 
-export function prepareGetClientCapabilities(ua: string = '') {
-  let version: isVersion;
-  try {
-    /**
-     * Make sure at least PublicKeyCredential is defined before trying to polyfill anything on it
-     */
-    version = new isVersion(ua);
-  } catch {
-    console.info('expected exception for the test.');
-  }
-
+export function prepareGetClientCapabilities(version: isVersion) {
   return async function () {
     let conditionalCreate: boolean | undefined = false;
     let conditionalGet: boolean | undefined = false;
@@ -105,8 +95,16 @@ export function applyPolyfill(ua: string = '') {
     return;
   }
 
+  let version: isVersion;
+  try {
+    version = new isVersion(ua);
+  } catch {
+    console.info('expected exception for the test.');
+    return;
+  }
+
   // Prepare getClientCapabilities only if `PublicKeyCredential` is available.
-  const getClientCapabilities = prepareGetClientCapabilities(ua);
+  const getClientCapabilities = prepareGetClientCapabilities(version);
 
   /**
    * Polyfill `PublicKeyCredential.getClientCapabilities`
