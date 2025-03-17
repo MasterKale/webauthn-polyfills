@@ -24,7 +24,7 @@ describe('iOS 17.5 Safari 17.5', () => {
   const ver = new isVersion(ua);
   it('should not be Blink 128 or later', () => {
     assertEquals(
-      ver.blink128OrLater,
+      ver.desktopBlink128OrLater,
       false,
     );
   });
@@ -54,7 +54,7 @@ describe('iOS 17.5 Chrome 118', () => {
   const ver = new isVersion(ua);
   it('should not be Blink 128 or later', () => {
     assertEquals(
-      ver.blink128OrLater,
+      ver.desktopBlink128OrLater,
       false,
     );
   });
@@ -84,7 +84,7 @@ describe('iOS 17.5 Edge 118', () => {
   const ver = new isVersion(ua);
   it('should not be Blink 128 or later', () => {
     assertEquals(
-      ver.blink128OrLater,
+      ver.desktopBlink128OrLater,
       false,
     );
   });
@@ -114,7 +114,7 @@ describe('macOS 14.0 Safari 17.5', () => {
   const ver = new isVersion(ua);
   it('should not be Blink 128 or later', () => {
     assertEquals(
-      ver.blink128OrLater,
+      ver.desktopBlink128OrLater,
       false,
     );
   });
@@ -144,7 +144,7 @@ describe('macOS 14.0 Chrome 128', () => {
   const ver = new isVersion(ua);
   it('should be Blink 128 or later', () => {
     assertEquals(
-      ver.blink128OrLater,
+      ver.desktopBlink128OrLater,
       true,
     );
   });
@@ -174,7 +174,7 @@ describe('macOS 14.0 Edge 128', () => {
   const ver = new isVersion(ua);
   it('should be Blink 128 or later', () => {
     assertEquals(
-      ver.blink128OrLater,
+      ver.desktopBlink128OrLater,
       true,
     );
   });
@@ -204,7 +204,7 @@ describe('Windows 10.0 Chrome 128', () => {
   const ver = new isVersion(ua);
   it('should be Blink 128 or later', () => {
     assertEquals(
-      ver.blink128OrLater,
+      ver.desktopBlink128OrLater,
       true,
     );
   });
@@ -234,7 +234,7 @@ describe('Windows 10.0 Edge 128', () => {
   const ver = new isVersion(ua);
   it('should be Blink 128 or later', () => {
     assertEquals(
-      ver.blink128OrLater,
+      ver.desktopBlink128OrLater,
       true,
     );
   });
@@ -264,7 +264,7 @@ describe('Android 13.0 Chrome 128', () => {
   const ver = new isVersion(ua);
   it('should be Blink 128 or later', () => {
     assertEquals(
-      ver.blink128OrLater,
+      ver.desktopBlink128OrLater,
       true,
     );
   });
@@ -294,7 +294,7 @@ describe('Android 13.0 Edge 128', () => {
   const ver = new isVersion(ua);
   it('should be Blink 128 or later', () => {
     assertEquals(
-      ver.blink128OrLater,
+      ver.desktopBlink128OrLater,
       true,
     );
   });
@@ -324,7 +324,7 @@ describe('Ubuntu 13.0 Chrome 128', () => {
   const ver = new isVersion(ua);
   it('should be Blink 128 or later', () => {
     assertEquals(
-      ver.blink128OrLater,
+      ver.desktopBlink128OrLater,
       true,
     );
   });
@@ -354,7 +354,7 @@ describe('Ubuntu 13.0 Edge 128', () => {
   const ver = new isVersion(ua);
   it('should be Blink 128 or later', () => {
     assertEquals(
-      ver.blink128OrLater,
+      ver.desktopBlink128OrLater,
       true,
     );
   });
