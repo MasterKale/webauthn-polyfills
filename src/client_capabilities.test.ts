@@ -52,4 +52,60 @@ describe('getClientCapabilities', () => {
       userVerifyingPlatformAuthenticator: true,
     });
   });
+
+  it('Polyfill is not applied in Chrome where getClientCapabilities exists', async () => {
+    PublicKeyCredential.getClientCapabilities = () => {
+      return Promise.resolve({
+        'conditionalCreate': false,
+        'conditionalGet': true,
+        'extension:appid': true,
+        'extension:appidExclude': true,
+        'extension:credBlob': true,
+        'extension:credProps': true,
+        'extension:credentialProtectionPolicy': true,
+        'extension:enforceCredentialProtectionPolicy': true,
+        'extension:getCredBlob': true,
+        'extension:hmacCreateSecret': true,
+        'extension:largeBlob': true,
+        'extension:minPinLength': true,
+        'extension:payment': true,
+        'extension:prf': true,
+        'hybridTransport': true,
+        'passkeyPlatformAuthenticator': true,
+        'relatedOrigins': true,
+        'signalAllAcceptedCredentials': true,
+        'signalCurrentUserDetails': true,
+        'signalUnknownCredential': true,
+        'userVerifyingPlatformAuthenticator': true,
+      });
+    };
+
+    const ua =
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36';
+    applyPolyfill(ua);
+    const capabilities = await PublicKeyCredential.getClientCapabilities();
+    assertObjectMatch(capabilities, {
+      'conditionalCreate': false,
+      'conditionalGet': true,
+      'extension:appid': true,
+      'extension:appidExclude': true,
+      'extension:credBlob': true,
+      'extension:credProps': true,
+      'extension:credentialProtectionPolicy': true,
+      'extension:enforceCredentialProtectionPolicy': true,
+      'extension:getCredBlob': true,
+      'extension:hmacCreateSecret': true,
+      'extension:largeBlob': true,
+      'extension:minPinLength': true,
+      'extension:payment': true,
+      'extension:prf': true,
+      'hybridTransport': true,
+      'passkeyPlatformAuthenticator': true,
+      'relatedOrigins': true,
+      'signalAllAcceptedCredentials': true,
+      'signalCurrentUserDetails': true,
+      'signalUnknownCredential': true,
+      'userVerifyingPlatformAuthenticator': true,
+    });
+  });
 });
