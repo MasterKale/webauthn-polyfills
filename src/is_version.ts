@@ -39,7 +39,7 @@ export class isVersion {
     this.iOS18OrLater = os.name === 'iOS' && compare(os.version, '18', '>=');
     // Blink 128 or later
     this.desktopBlink128OrLater = engine.name === 'Blink' &&
-      ['macOS', 'Windows', 'Linux', 'Chrome OS'].includes(os.name) &&
+      ['Mac OS', 'Windows', 'Linux', 'Chrome OS'].includes(os.name) &&
       compare(engine.version, '128', '>=');
     // Blink 135 or later
     this.desktopBlink135OrLater = engine.name === 'Blink' &&
