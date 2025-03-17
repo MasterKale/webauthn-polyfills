@@ -22,7 +22,7 @@ describe('iOS 17.5 Safari 17.5', () => {
   const ua =
     'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1';
   const ver = new isVersion(ua);
-  it('should not be Blink 128 or later', () => {
+  it('should not be desktop Blink 128 or later', () => {
     assertEquals(
       ver.desktopBlink128OrLater,
       false,
@@ -52,7 +52,7 @@ describe('iOS 17.5 Chrome 118', () => {
   const ua =
     'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/118.0.5993.90 Mobile/15E148 Safari/604.1';
   const ver = new isVersion(ua);
-  it('should not be Blink 128 or later', () => {
+  it('should not be desktop Blink 128 or later', () => {
     assertEquals(
       ver.desktopBlink128OrLater,
       false,
@@ -82,7 +82,7 @@ describe('iOS 17.5 Edge 118', () => {
   const ua =
     'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) EdgiOS/118.0.0.0 Mobile/15E148 Safari/604.1';
   const ver = new isVersion(ua);
-  it('should not be Blink 128 or later', () => {
+  it('should not be desktop Blink 128 or later', () => {
     assertEquals(
       ver.desktopBlink128OrLater,
       false,
@@ -112,7 +112,7 @@ describe('macOS 14.0 Safari 17.5', () => {
   const ua =
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15';
   const ver = new isVersion(ua);
-  it('should not be Blink 128 or later', () => {
+  it('should not be desktop Blink 128 or later', () => {
     assertEquals(
       ver.desktopBlink128OrLater,
       false,
@@ -142,7 +142,7 @@ describe('macOS 14.0 Chrome 128', () => {
   const ua =
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36';
   const ver = new isVersion(ua);
-  it('should be Blink 128 or later', () => {
+  it('should be desktop Blink 128 or later', () => {
     assertEquals(
       ver.desktopBlink128OrLater,
       true,
@@ -172,7 +172,7 @@ describe('macOS 14.0 Edge 128', () => {
   const ua =
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0';
   const ver = new isVersion(ua);
-  it('should be Blink 128 or later', () => {
+  it('should be desktop Blink 128 or later', () => {
     assertEquals(
       ver.desktopBlink128OrLater,
       true,
@@ -202,7 +202,7 @@ describe('Windows 10.0 Chrome 128', () => {
   const ua =
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36';
   const ver = new isVersion(ua);
-  it('should be Blink 128 or later', () => {
+  it('should be desktop Blink 128 or later', () => {
     assertEquals(
       ver.desktopBlink128OrLater,
       true,
@@ -232,7 +232,7 @@ describe('Windows 10.0 Edge 128', () => {
   const ua =
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0';
   const ver = new isVersion(ua);
-  it('should be Blink 128 or later', () => {
+  it('should be desktop Blink 128 or later', () => {
     assertEquals(
       ver.desktopBlink128OrLater,
       true,
@@ -262,10 +262,10 @@ describe('Android 13.0 Chrome 128', () => {
   const ua =
     'Mozilla/5.0 (Linux; Android 13; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36';
   const ver = new isVersion(ua);
-  it('should be Blink 128 or later', () => {
+  it('should not be desktop Blink 128 or later', () => {
     assertEquals(
       ver.desktopBlink128OrLater,
-      true,
+      false,
     );
   });
   it('should not be iOS 18 or later', () => {
@@ -292,10 +292,10 @@ describe('Android 13.0 Edge 128', () => {
   const ua =
     'Mozilla/5.0 (Linux; Android 13; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36 EdgA/128.0.0.0';
   const ver = new isVersion(ua);
-  it('should be Blink 128 or later', () => {
+  it('should not be desktop Blink 128 or later', () => {
     assertEquals(
       ver.desktopBlink128OrLater,
-      true,
+      false,
     );
   });
   it('should not be iOS 18 or later', () => {
@@ -322,7 +322,7 @@ describe('Ubuntu 13.0 Chrome 128', () => {
   const ua =
     'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36';
   const ver = new isVersion(ua);
-  it('should be Blink 128 or later', () => {
+  it('should be desktop Blink 128 or later', () => {
     assertEquals(
       ver.desktopBlink128OrLater,
       true,
@@ -352,7 +352,7 @@ describe('Ubuntu 13.0 Edge 128', () => {
   const ua =
     'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0';
   const ver = new isVersion(ua);
-  it('should be Blink 128 or later', () => {
+  it('should be desktop Blink 128 or later', () => {
     assertEquals(
       ver.desktopBlink128OrLater,
       true,
