@@ -11,14 +11,6 @@ describe('getClientCapabilities', () => {
   beforeEach(() => {
     // @ts-ignore For test purposes
     globalThis.PublicKeyCredential = {};
-
-    PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable = () => {
-      return Promise.resolve(true);
-    };
-
-    PublicKeyCredential.isConditionalMediationAvailable = () => {
-      return Promise.resolve(true);
-    };
   });
 
   it('iOS 17.5 Safari 17.5 returns `conditionalGet` instead of `conditionalMediation`', async () => {
@@ -106,6 +98,39 @@ describe('getClientCapabilities', () => {
       'signalCurrentUserDetails': true,
       'signalUnknownCredential': true,
       'userVerifyingPlatformAuthenticator': true,
+    });
+  });
+
+  it('Apply polyfill if getClientCapabilities does not exist', async () => {
+    PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable = () => {
+      return Promise.resolve(true);
+    };
+
+    PublicKeyCredential.isConditionalMediationAvailable = () => {
+      return Promise.resolve(true);
+    };
+
+    // @ts-ignore
+    PublicKeyCredential.signalAllAcceptedCredentials = () => Promise.resolve();
+    // @ts-ignore
+    PublicKeyCredential.signalCurrentUserDetails = () => Promise.resolve();
+    // @ts-ignore
+    PublicKeyCredential.signalUnknownCredential = () => Promise.resolve();
+
+    const ua =
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36';
+    applyPolyfill(ua);
+    const capabilities = await PublicKeyCredential.getClientCapabilities();
+    assertObjectMatch(capabilities, {
+      conditionalCreate: false,
+      conditionalGet: true,
+      hybridTransport: undefined,
+      passkeyPlatformAuthenticator: undefined,
+      relatedOrigins: true,
+      signalAllAcceptedCredentials: true,
+      signalCurrentUserDetails: true,
+      signalUnknownCredential: false,
+      userVerifyingPlatformAuthenticator: true,
     });
   });
 });
