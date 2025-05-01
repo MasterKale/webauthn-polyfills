@@ -24,7 +24,7 @@ export class isVersion {
       throw new Error('OS version not found.');
     }
 
-    // Between iOS 17.4 and 18.3
+    // Between iOS 17.4 (inclusive) and 18.3 (inclusive), defined by version >= '17.4' and version < '18.4'
     this.iOS174To183 = os.name === 'iOS' &&
       compare(os.version, '17.4', '>=') &&
       compare(os.version, '18.4', '<');
