@@ -4,10 +4,10 @@ import { describe, it } from '@std/testing/bdd';
 import { isVersion } from './is_version.ts';
 
 /*
- * iOS Safari 17.4 < 18.2
- * iOS Chrome 17.4 < 18.2
- * iOS Edge 17.4 < 18.2
- * macOS Safari 17.4 < 18.2
+ * iOS Safari 17.4 < 18.3
+ * iOS Chrome 17.4 < 18.3
+ * iOS Edge 17.4 < 18.3
+ * macOS Safari 17.4 < 18.3
  * macOS Chrome 128+
  * macOS Edge (Blink 128+)
  * Windows Chrome 128+
@@ -34,15 +34,15 @@ describe('iOS 17.5 Safari 17.5', () => {
       false,
     );
   });
-  it('should not be Safari 17.4 to 18.2', () => {
+  it('should not be Safari 17.4 to 18.3', () => {
     assertEquals(
-      ver.safari174To182,
+      ver.safari174To183,
       false,
     );
   });
-  it('should be iOS 17.4 to 18.2', () => {
+  it('should be iOS 17.4 to 18.3', () => {
     assertEquals(
-      ver.iOS174To182,
+      ver.iOS174To183,
       true,
     );
   });
@@ -64,15 +64,15 @@ describe('iOS 17.5 Chrome 118', () => {
       false,
     );
   });
-  it('should not be Safari 17.4 to 18.2', () => {
+  it('should not be Safari 17.4 to 18.3', () => {
     assertEquals(
-      ver.safari174To182,
+      ver.safari174To183,
       false,
     );
   });
-  it('should be iOS 17.4 to 18.2', () => {
+  it('should be iOS 17.4 to 18.3', () => {
     assertEquals(
-      ver.iOS174To182,
+      ver.iOS174To183,
       true,
     );
   });
@@ -94,15 +94,15 @@ describe('iOS 17.5 Edge 118', () => {
       false,
     );
   });
-  it('should not be Safari 17.4 to 18.2', () => {
+  it('should not be Safari 17.4 to 18.3', () => {
     assertEquals(
-      ver.safari174To182,
+      ver.safari174To183,
       false,
     );
   });
-  it('should be iOS 17.4 to 18.2', () => {
+  it('should be iOS 17.4 to 18.3', () => {
     assertEquals(
-      ver.iOS174To182,
+      ver.iOS174To183,
       true,
     );
   });
@@ -124,15 +124,15 @@ describe('macOS 14.0 Safari 17.5', () => {
       false,
     );
   });
-  it('should be Safari 17.4 to 18.2', () => {
+  it('should be Safari 17.4 to 18.3', () => {
     assertEquals(
-      ver.safari174To182,
+      ver.safari174To183,
       true,
     );
   });
-  it('should not be iOS 17.4 to 18.2', () => {
+  it('should not be iOS 17.4 to 18.3', () => {
     assertEquals(
-      ver.iOS174To182,
+      ver.iOS174To183,
       false,
     );
   });
@@ -154,15 +154,15 @@ describe('macOS 14.0 Chrome 128', () => {
       false,
     );
   });
-  it('should not be Safari 17.4 to 18.2', () => {
+  it('should not be Safari 17.4 to 18.3', () => {
     assertEquals(
-      ver.safari174To182,
+      ver.safari174To183,
       false,
     );
   });
-  it('should not be iOS 17.4 to 18.2', () => {
+  it('should not be iOS 17.4 to 18.3', () => {
     assertEquals(
-      ver.iOS174To182,
+      ver.iOS174To183,
       false,
     );
   });
@@ -184,15 +184,15 @@ describe('macOS 14.0 Edge 128', () => {
       false,
     );
   });
-  it('should not be Safari 17.4 to 18.2', () => {
+  it('should not be Safari 17.4 to 18.3', () => {
     assertEquals(
-      ver.safari174To182,
+      ver.safari174To183,
       false,
     );
   });
-  it('should not be iOS 17.4 to 18.2', () => {
+  it('should not be iOS 17.4 to 18.3', () => {
     assertEquals(
-      ver.iOS174To182,
+      ver.iOS174To183,
       false,
     );
   });
@@ -214,15 +214,15 @@ describe('Windows 10.0 Chrome 128', () => {
       false,
     );
   });
-  it('should not be Safari 17.4 to 18.2', () => {
+  it('should not be Safari 17.4 to 18.3', () => {
     assertEquals(
-      ver.safari174To182,
+      ver.safari174To183,
       false,
     );
   });
-  it('should not be iOS 17.4 to 18.2', () => {
+  it('should not be iOS 17.4 to 18.3', () => {
     assertEquals(
-      ver.iOS174To182,
+      ver.iOS174To183,
       false,
     );
   });
@@ -244,15 +244,15 @@ describe('Windows 10.0 Edge 128', () => {
       false,
     );
   });
-  it('should not be Safari 17.4 to 18.2', () => {
+  it('should not be Safari 17.4 to 18.3', () => {
     assertEquals(
-      ver.safari174To182,
+      ver.safari174To183,
       false,
     );
   });
-  it('should not be iOS 17.4 to 18.2', () => {
+  it('should not be iOS 17.4 to 18.3', () => {
     assertEquals(
-      ver.iOS174To182,
+      ver.iOS174To183,
       false,
     );
   });
@@ -274,15 +274,15 @@ describe('Android 13.0 Chrome 128', () => {
       false,
     );
   });
-  it('should not be Safari 17.4 to 18.2', () => {
+  it('should not be Safari 17.4 to 18.3', () => {
     assertEquals(
-      ver.safari174To182,
+      ver.safari174To183,
       false,
     );
   });
-  it('should not be iOS 17.4 to 18.2', () => {
+  it('should not be iOS 17.4 to 18.3', () => {
     assertEquals(
-      ver.iOS174To182,
+      ver.iOS174To183,
       false,
     );
   });
@@ -304,15 +304,15 @@ describe('Android 13.0 Edge 128', () => {
       false,
     );
   });
-  it('should not be Safari 17.4 to 18.2', () => {
+  it('should not be Safari 17.4 to 18.3', () => {
     assertEquals(
-      ver.safari174To182,
+      ver.safari174To183,
       false,
     );
   });
-  it('should not be iOS 17.4 to 18.2', () => {
+  it('should not be iOS 17.4 to 18.3', () => {
     assertEquals(
-      ver.iOS174To182,
+      ver.iOS174To183,
       false,
     );
   });
@@ -334,15 +334,15 @@ describe('Ubuntu 13.0 Chrome 128', () => {
       false,
     );
   });
-  it('should not be Safari 17.4 to 18.2', () => {
+  it('should not be Safari 17.4 to 18.3', () => {
     assertEquals(
-      ver.safari174To182,
+      ver.safari174To183,
       false,
     );
   });
-  it('should not be iOS 17.4 to 18.2', () => {
+  it('should not be iOS 17.4 to 18.3', () => {
     assertEquals(
-      ver.iOS174To182,
+      ver.iOS174To183,
       false,
     );
   });
@@ -364,15 +364,15 @@ describe('Ubuntu 13.0 Edge 128', () => {
       false,
     );
   });
-  it('should not be Safari 17.4 to 18.2', () => {
+  it('should not be Safari 17.4 to 18.3', () => {
     assertEquals(
-      ver.safari174To182,
+      ver.safari174To183,
       false,
     );
   });
-  it('should not be iOS 17.4 to 18.2', () => {
+  it('should not be iOS 17.4 to 18.3', () => {
     assertEquals(
-      ver.iOS174To182,
+      ver.iOS174To183,
       false,
     );
   });

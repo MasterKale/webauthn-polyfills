@@ -129,6 +129,7 @@ describe('Registration PublicKeyCredential.prototype.toJSON', () => {
     } as AuthenticatorAttestationResponse,
     type: 'public-key',
     getClientExtensionResults: () => ({}),
+    toJSON: () => ({}),
   } as PublicKeyCredential;
   const expected = {
     authenticatorAttachment: original.authenticatorAttachment,
@@ -169,6 +170,7 @@ describe('Authentication PublicKeyCredential.prototype.toJSON', () => {
     } as AuthenticatorAssertionResponse,
     type: 'public-key',
     getClientExtensionResults: () => ({}),
+    toJSON: () => ({}),
   } as PublicKeyCredential;
   const expected = {
     authenticatorAttachment: original.authenticatorAttachment,
