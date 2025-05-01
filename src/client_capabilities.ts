@@ -22,10 +22,10 @@ export function prepareGetClientCapabilities(version: isVersion) {
     let signalUnknownCredential: boolean | undefined = false;
     let userVerifyingPlatformAuthenticator: boolean | undefined = false;
 
-    // If the browser is above macOS Safari 17.4 and below Safari 18.2, or above
-    // iOS 17.4 and below iOS 18.2, replace `conditionalMediation` with
+    // If the browser is above macOS Safari 17.4 and below Safari 18.3, or above
+    // iOS 17.4 and below iOS 18.3, replace `conditionalMediation` with
     // `conditionalGet`.
-    if ((version.safari174To182 || version.iOS174To182) && originalGetClientCapabilities) {
+    if ((version.safari174To183 || version.iOS174To183) && originalGetClientCapabilities) {
       const capabilities = await originalGetClientCapabilities();
 
       conditionalCreate = capabilities?.conditionalCreate;
@@ -112,7 +112,7 @@ export function applyPolyfill(ua: string = '') {
    *
    * See https://w3c.github.io/webauthn/#sctn-getClientCapabilities
    */
-  if (!PublicKeyCredential.getClientCapabilities || version.safari174To182 || version.iOS174To182) {
+  if (!PublicKeyCredential.getClientCapabilities || version.safari174To183 || version.iOS174To183) {
     Object.defineProperty(PublicKeyCredential, 'getClientCapabilities', {
       value: getClientCapabilities,
     });
