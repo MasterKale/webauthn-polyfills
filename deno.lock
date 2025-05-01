@@ -29,6 +29,7 @@
     "jsr:@ts-morph/bootstrap@0.24": "0.24.0",
     "jsr:@ts-morph/common@0.24": "0.24.0",
     "npm:@simplewebauthn/types@11": "11.0.0",
+    "npm:@types/compare-versions@^3.3.3": "3.3.3",
     "npm:@types/ua-parser-js@~0.7.39": "0.7.39",
     "npm:compare-versions@^6.1.1": "6.1.1",
     "npm:ua-parser-js@^1.0.39": "1.0.39"
@@ -159,6 +160,12 @@
   "npm": {
     "@simplewebauthn/types@11.0.0": {
       "integrity": "sha512-b2o0wC5u2rWts31dTgBkAtSNKGX0cvL6h8QedNsKmj8O4QoLFQFR3DBVBUlpyVEhYKA+mXGUaXbcOc4JdQ3HzA=="
+    },
+    "@types/compare-versions@3.3.3": {
+      "integrity": "sha512-23VWpoAFMe41fIMV5MG1ITyUDj2gBUVjhNYwRwhx8wlSZOirx3/Zlmfpv7ox3bvmXYZS+r/3ClZZqsAY6hvjsQ==",
+      "dependencies": [
+        "compare-versions"
+      ]
     },
     "@types/ua-parser-js@0.7.39": {
       "integrity": "sha512-P/oDfpofrdtF5xw433SPALpdSchtJmY7nsJItf8h3KXqOslkbySh8zq4dSWXH2oTjRvJ5PczVEoCZPow6GicLg=="
