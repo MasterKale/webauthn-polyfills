@@ -1,41 +1,37 @@
 import { assertObjectMatch } from '@std/assert';
-import { describe, it } from '@std/testing/bdd';
+import { beforeEach, describe, it } from '@std/testing/bdd';
 
-import { prepareGetClientCapabilities } from './client_capabilities.ts';
+import { applyPolyfill } from './client_capabilities.ts';
 
-// @ts-ignore For test purposes
-globalThis.PublicKeyCredential = {};
+declare var PublicKeyCredential: typeof globalThis.PublicKeyCredential & {
+  getClientCapabilities(): Promise<any>;
+};
 
 describe('getClientCapabilities', () => {
-  const ua =
-    'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1';
-
-  // @ts-ignore PublicKeyCredential is here for test purposes and never used.
-  PublicKeyCredential.getClientCapabilities = () => {
-    return Promise.resolve({
-      conditionalCreate: true,
-      conditionalMediation: true,
-      hybridTransport: true,
-      passkeyPlatformAuthenticator: true,
-      relatedOrigins: true,
-      signalAllAcceptedCredentials: false,
-      signalCurrentUserDetails: false,
-      signalUnknownCredential: false,
-      userVerifyingPlatformAuthenticator: true,
-    });
-  };
-
-  PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable = () => {
-    return Promise.resolve(true);
-  };
-
-  PublicKeyCredential.isConditionalMediationAvailable = () => {
-    return Promise.resolve(true);
-  };
+  beforeEach(() => {
+    // @ts-ignore For test purposes
+    globalThis.PublicKeyCredential = {};
+  });
 
   it('iOS 17.5 Safari 17.5 returns `conditionalGet` instead of `conditionalMediation`', async () => {
-    const getClientCapabilities = prepareGetClientCapabilities(ua);
-    const capabilities = await getClientCapabilities();
+    PublicKeyCredential.getClientCapabilities = () => {
+      return Promise.resolve({
+        conditionalCreate: true,
+        conditionalMediation: true,
+        hybridTransport: true,
+        passkeyPlatformAuthenticator: true,
+        relatedOrigins: true,
+        signalAllAcceptedCredentials: false,
+        signalCurrentUserDetails: false,
+        signalUnknownCredential: false,
+        userVerifyingPlatformAuthenticator: true,
+      });
+    };
+
+    const ua =
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1';
+    applyPolyfill(ua);
+    const capabilities = await PublicKeyCredential.getClientCapabilities();
     assertObjectMatch(capabilities, {
       conditionalCreate: true,
       conditionalGet: true,
@@ -45,6 +41,95 @@ describe('getClientCapabilities', () => {
       signalAllAcceptedCredentials: false,
       signalCurrentUserDetails: false,
       signalUnknownCredential: false,
+      userVerifyingPlatformAuthenticator: true,
+    });
+  });
+
+  it('Polyfill is not applied in Chrome where getClientCapabilities exists', async () => {
+    PublicKeyCredential.getClientCapabilities = () => {
+      return Promise.resolve({
+        'conditionalCreate': false,
+        'conditionalGet': true,
+        'extension:appid': true,
+        'extension:appidExclude': true,
+        'extension:credBlob': true,
+        'extension:credProps': true,
+        'extension:credentialProtectionPolicy': true,
+        'extension:enforceCredentialProtectionPolicy': true,
+        'extension:getCredBlob': true,
+        'extension:hmacCreateSecret': true,
+        'extension:largeBlob': true,
+        'extension:minPinLength': true,
+        'extension:payment': true,
+        'extension:prf': true,
+        'hybridTransport': true,
+        'passkeyPlatformAuthenticator': true,
+        'relatedOrigins': true,
+        'signalAllAcceptedCredentials': true,
+        'signalCurrentUserDetails': true,
+        'signalUnknownCredential': true,
+        'userVerifyingPlatformAuthenticator': true,
+      });
+    };
+
+    const ua =
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36';
+    applyPolyfill(ua);
+    const capabilities = await PublicKeyCredential.getClientCapabilities();
+    assertObjectMatch(capabilities, {
+      'conditionalCreate': false,
+      'conditionalGet': true,
+      'extension:appid': true,
+      'extension:appidExclude': true,
+      'extension:credBlob': true,
+      'extension:credProps': true,
+      'extension:credentialProtectionPolicy': true,
+      'extension:enforceCredentialProtectionPolicy': true,
+      'extension:getCredBlob': true,
+      'extension:hmacCreateSecret': true,
+      'extension:largeBlob': true,
+      'extension:minPinLength': true,
+      'extension:payment': true,
+      'extension:prf': true,
+      'hybridTransport': true,
+      'passkeyPlatformAuthenticator': true,
+      'relatedOrigins': true,
+      'signalAllAcceptedCredentials': true,
+      'signalCurrentUserDetails': true,
+      'signalUnknownCredential': true,
+      'userVerifyingPlatformAuthenticator': true,
+    });
+  });
+
+  it('Apply polyfill if getClientCapabilities does not exist', async () => {
+    PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable = () => {
+      return Promise.resolve(true);
+    };
+
+    PublicKeyCredential.isConditionalMediationAvailable = () => {
+      return Promise.resolve(true);
+    };
+
+    // @ts-ignore
+    PublicKeyCredential.signalAllAcceptedCredentials = () => Promise.resolve();
+    // @ts-ignore
+    PublicKeyCredential.signalCurrentUserDetails = () => Promise.resolve();
+    // @ts-ignore
+    PublicKeyCredential.signalUnknownCredential = () => Promise.resolve();
+
+    const ua =
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36';
+    applyPolyfill(ua);
+    const capabilities = await PublicKeyCredential.getClientCapabilities();
+    assertObjectMatch(capabilities, {
+      conditionalCreate: false,
+      conditionalGet: true,
+      hybridTransport: undefined,
+      passkeyPlatformAuthenticator: undefined,
+      relatedOrigins: true,
+      signalAllAcceptedCredentials: true,
+      signalCurrentUserDetails: true,
+      signalUnknownCredential: true,
       userVerifyingPlatformAuthenticator: true,
     });
   });

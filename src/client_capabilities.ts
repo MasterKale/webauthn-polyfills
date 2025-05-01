@@ -1,15 +1,11 @@
 import { isVersion } from './is_version.ts';
 
-export function prepareGetClientCapabilities(ua: string = '') {
-  let version: isVersion;
-  try {
-    /**
-     * Make sure at least PublicKeyCredential is defined before trying to polyfill anything on it
-     */
-    version = new isVersion(ua);
-  } catch {
-    console.info('expected exception for the test.');
-  }
+declare var PublicKeyCredential: typeof globalThis.PublicKeyCredential & {
+  getClientCapabilities?(): Promise<any>;
+};
+
+export function prepareGetClientCapabilities(version: isVersion) {
+  const originalGetClientCapabilities = PublicKeyCredential?.getClientCapabilities;
 
   return async function () {
     let conditionalCreate: boolean | undefined = false;
@@ -29,9 +25,8 @@ export function prepareGetClientCapabilities(ua: string = '') {
     // If the browser is above macOS Safari 17.4 and below Safari 18.2, or above
     // iOS 17.4 and below iOS 18.2, replace `conditionalMediation` with
     // `conditionalGet`.
-    if (version.safari174To182 || version.iOS174To182) {
-      // @ts-ignore: We're polyfilling this, so ignore whether TS knows about this or not
-      const capabilities = await PublicKeyCredential.getClientCapabilities();
+    if ((version.safari174To182 || version.iOS174To182) && originalGetClientCapabilities) {
+      const capabilities = await originalGetClientCapabilities();
 
       conditionalCreate = capabilities?.conditionalCreate;
       // Replace `conditionalMediation` with `conditionalGet`.
@@ -68,7 +63,7 @@ export function prepareGetClientCapabilities(ua: string = '') {
       }
 
       // @ts-ignore: It's okay if this doesn't exist
-      if (PublicKeyCredential?.signalUknownCredential) {
+      if (PublicKeyCredential?.signalUnknownCredential) {
         signalUnknownCredential = true;
       }
 
@@ -93,22 +88,35 @@ export function prepareGetClientCapabilities(ua: string = '') {
   };
 }
 
-/**
- * Make sure at least PublicKeyCredential is defined before trying to polyfill anything on it
- */
-if (globalThis.PublicKeyCredential) {
+export function applyPolyfill(ua: string = '') {
+  /**
+   * Make sure at least PublicKeyCredential is defined before trying to polyfill anything on it
+   */
+  if (!globalThis.PublicKeyCredential) {
+    return;
+  }
+
+  let version: isVersion;
+  try {
+    version = new isVersion(ua);
+  } catch {
+    console.info('expected exception for the test.');
+    return;
+  }
+
   // Prepare getClientCapabilities only if `PublicKeyCredential` is available.
-  const getClientCapabilities = prepareGetClientCapabilities();
+  const getClientCapabilities = prepareGetClientCapabilities(version);
 
   /**
    * Polyfill `PublicKeyCredential.getClientCapabilities`
    *
    * See https://w3c.github.io/webauthn/#sctn-getClientCapabilities
    */
-  // @ts-ignore: We're polyfilling this, so ignore whether TS knows about this or not
   if (!PublicKeyCredential.getClientCapabilities || version.safari174To182 || version.iOS174To182) {
     Object.defineProperty(PublicKeyCredential, 'getClientCapabilities', {
       value: getClientCapabilities,
     });
   }
 }
+
+applyPolyfill();
