@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.7
+
+- Various bugfixes ([#12](https://github.com/MasterKale/webauthn-polyfills/pull/12), [#13](https://github.com/MasterKale/webauthn-polyfills/pull/13))
+
 ## v0.1.6
 
 - Fixed polyfill not being used when `PublicKeyCredential.getClientCapabilities` exists ([#10](https://github.com/MasterKale/webauthn-polyfills/pull/10))
